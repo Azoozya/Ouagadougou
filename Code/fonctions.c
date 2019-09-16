@@ -64,8 +64,8 @@ split* init_split_buffer(mp* master)
 
       cell->previous = previous;
       cell->next = NULL;
-      cell->operande = 100;
-      cell->operator = 100;
+      cell->operande = 0;
+      cell->operator = 0;
       previous = cell;
 
       if(rank == 0)
@@ -77,7 +77,7 @@ split* init_split_buffer(mp* master)
 }
 
 //On ignore ce qu'il pourrait potentiellement contenir
-void split_gene_raw(char* list,split* raw)
+void split_gene_raw(unsigned char* list,split* raw)
 {
     split* buffer = raw;
     for(int rank = 0 ; rank < NBGENE/2 ; rank++)
@@ -96,43 +96,74 @@ void split_gene_raw(char* list,split* raw)
       }
 }
 
-void first_evaluation(split* raw)
+split* first_evaluation(split* raw)
 {
   split* buffer = raw;
   short operande1 = 0;
   short operande2 = 0;
   short operator = 0;
   short result = 0;
-  while (buffer != NULL)
+  printf("--------------------------");
+  while (buffer != NULL && buffer->next != NULL)
     {
       if(buffer->operator == '+' || buffer->operator == '-' || buffer->operator == 0 || buffer->operator == 1)
         buffer = buffer->next;
-      else if (buffer->operator != '\0')
+      else if (buffer->operator != '\0' && test_succes(buffer->next) == YES)
         {
           operande1 = buffer->operande;
           operator = buffer->operator;
           operande2 = buffer->next->operande;
           result = calcul(operande1,operator,operande2);
-          if(test_succes(buffer->next) == YES)
+
+          if(test_succes(buffer->next) == YES && test_succes(buffer->previous) == YES)
             {
               buffer->next->previous = buffer->previous;
-              
+              buffer->previous->next = buffer->next;
+              buffer->next->operande = result;
             }
-
-          buffer->previous->next = buffer->next;
+          else if(test_succes(buffer->previous) != YES && test_succes(buffer->next) == YES)
+            {
+              buffer->next->previous = NULL;
+              raw = raw->next;
+              buffer->next->operande = result;
+            }
+          else if(test_succes(buffer->next) != YES && test_succes(buffer->previous) == YES)
+            {
+              buffer->operande = result;
+              buffer->operator = conversion('\0');
+            }
           buffer = buffer->next;
         }
     }
+return raw;
 }
 
-char* merge_gen(mp* master)
+int evaluation(split* raw)
 {
-  char* to_return = NULL;
+  split* priority_done = first_evaluation(raw);
+  int to_return = priority_done->operande;
+  short operator = 0;
+  short operande2 = 0;
+  while (test_succes(priority_done->next) == YES)
+    {
+      if(priority_done->operator == '+' || priority_done->operator == '-' || priority_done->operator == 0 || priority_done->operator == 1)
+        {
+          operator = priority_done->operator;
+          operande2 = priority_done->next->operande;
+          to_return = calcul(to_return,operator,operande2);
+        }
+      priority_done = priority_done->next;
+    }
   return to_return;
 }
 
+unsigned char* merge_gen(mp* master)
+{
+  unsigned char* to_return = NULL;
+  return to_return;
+}
 
-char conversion(char Input)
+unsigned char conversion(unsigned char Input)
 {
 	switch (Input)
 		{

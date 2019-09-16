@@ -73,11 +73,12 @@ void delete_down(mp* head);
 void delete_up_and_down(REPLACE_ME* cell);
 int test_succes(void* name);
 split* init_split_buffer(mp* master);
-void split_gene_raw(char* list,split* raw);
-char* merge_gen(mp* master);
-void first_evaluation(split* raw);
+void split_gene_raw(unsigned char* list,split* raw);
+unsigned char* merge_gen(mp* master);
+split* first_evaluation(split* raw);
+int evaluation(split* raw);
 /* main (devrait être vide) */
-char conversion(char Input);
+unsigned char conversion(unsigned char Input);
 void afficher(split* buffer);
 short calcul(short operande1,short operator,short operande2);
 /* test */
