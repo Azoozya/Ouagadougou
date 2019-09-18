@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 #include <string.h>
 
 #define ERROR 63336
@@ -26,13 +27,17 @@
 #define NBGENE 64
 #endif
 
-typedef struct {
-	unsigned char gene[NBGENE/2];
+typedef struct serpent serpent;
+struct serpent
+{
+	unsigned char* gene;
 	int score;
-} serpent;
+	serpent* next;
+	serpent* previous;
+};
 
 typedef struct {
-	serpent *membres;
+	serpent* membres;
 	int nombre;
 } groupe;
 
@@ -74,11 +79,14 @@ void delete_up_and_down(REPLACE_ME* cell);
 int test_succes(void* name);
 split* init_split_buffer(mp* master);
 void split_gene_raw(unsigned char* list,split* raw);
-unsigned char* merge_gen(mp* master);
 split* first_evaluation(split* raw);
-int evaluation(split* raw);
-/* main (devrait être vide) */
+int evaluation(unsigned char* list,mp* master);
+unsigned char* new_born(groupe* group,mp* master);
+void prandom_generation(unsigned char* score_table,groupe* head,char nb_gen,mp* master);
 unsigned char conversion(unsigned char Input);
 void afficher(split* buffer);
 short calcul(short operande1,short operator,short operande2);
+
+/* main (devrait être vide) */
+
 /* test */

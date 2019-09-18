@@ -9,17 +9,16 @@ int main(int argc,char* argv[])
 	//do {
 	//	CHANGE_ME = malloc(sizeof(char));
 	//	if (test_succes(CHANGE_ME) == YES)
-	//		add_pointer_master((void*)lama ,master);
+	//		add_pointer_master((void*)CHANGE_ME ,master);
 	//} while(test_succes(CHANGE_ME) != YES);
-	split* raw = init_split_buffer(master);
-	int score = 0;
-	afficher(raw);
-	unsigned char* exemple = (unsigned char*)"\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x10\x11\x23";
-	split_gene_raw(exemple,raw);
-	afficher(raw);
-	score = evaluation(raw);
-	afficher(raw);
-	printf("\n SCORE : %d\n",score);
+
+	groupe exemple;
+	exemple.membres = NULL;
+	exemple.nombre = 0;
+
+	unsigned char* scores = new_born(&exemple,master);
+	for(int rank = 0 ; rank < NBPOPULATION ; rank++)
+		printf("Score : %x\n",scores[rank]);
 	delete_down(master);
 	return 0;
 }
