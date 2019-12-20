@@ -20,7 +20,7 @@
 #endif
 
 #ifndef VIDE
-#define VIDE 255
+#define VIDE 666000000
 #endif
 
 typedef struct {
@@ -42,7 +42,7 @@ int evaluation(groupe *population);
 void generationAleatoire(groupe *population);
 void reproduction(groupe *population,groupe *parents);
 void mutation (groupe *population);
-unsigned char* LectureGene(serpent *g);
+int* LectureGene(serpent *g);
 
 
 // -------------------TESTS-------------------//

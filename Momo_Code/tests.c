@@ -2,7 +2,7 @@
 
 int main(void){
 //	testLecture();
-
+	testCalcul();
 	return 1;
 }
 
@@ -37,7 +37,7 @@ serpent test[]={
 void testLecture(void)
 {
   serpent test = {"\x67\xc6\x69\x73\x51\xff\x4a\xec\x29\xcd\xba\xab\xf2\xfb\xe3\x46\x7c\xc2\x54\xf8\x1b\xe8\xe7\x8d\x76\x5a\x2e\x63\x33\x9f\xc9\x9a",660};
-  unsigned char *TestTab;
+  int *TestTab;
 
   TestTab = LectureGene(&test);
   affiche(test.gene);
