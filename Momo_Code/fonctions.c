@@ -13,7 +13,7 @@ void affiche(unsigned char *gene)
 		if (i%2)
 			printf("%c ",code[res%4]);
 		else
-			printf("0x%x ",res);
+			printf("%d ",res);
 		i=i+1;
 	}
 	printf("\n");
@@ -59,42 +59,10 @@ void calcul(serpent *g)
 	int gene_index;
 	int NONE_index = NBGENE - 2;
 	int* tab_gene_lu = LectureGene(g);
-	
-	/*
-	//MULTIPLICATION
-	gene_index = 1;
-	while (gene_index < NBGENE - 2 && tab_gene_lu[gene_index] != VIDE)
-	{
-		if(tab_gene_lu[gene_index] == '*')
-		{
-			//Calcul du produit
-			gene_previous = tab_gene_lu[gene_index - 1];
-			gene_next = tab_gene_lu[gene_index + 1];
-			gene_buffer = gene_previous * gene_next;
 
-			//Mise du résultat dans le tableau + Décalage des valeurs du tableau + Affectation valeur VIDE aux derniers emplacements de la liste
-			tab_gene_lu[gene_index - 1] = gene_buffer;
-			for(int index_tab = gene_index; index_tab < NBGENE - 3; index_tab++) tab_gene_lu[index_tab] = tab_gene_lu[index_tab + 2];
-			tab_gene_lu[NONE_index] = VIDE;
-			tab_gene_lu[NONE_index - 1] = VIDE;
-			NONE_index = NONE_index - 2;
-		}
-		if(tab_gene_lu[gene_index] != '*') gene_index = gene_index + 2;
-		
-		 for (int index = 0; index < NBGENE-1 ; index ++)
-		{
-			if (tab_gene_lu[index] != VIDE)
-			{
-				if (index%2 == 0) printf("%d ",tab_gene_lu[index]);
-				if (index%2 == 1) printf("%c ",tab_gene_lu[index]);
-			}
-		}
-		printf("\n");
-	}*/
-	
 	//MULTIPLICATION + DIVISION
 	gene_index = 1;
-	while (gene_index < NBGENE - 2 && tab_gene_lu[gene_index] != VIDE && verif_erreur != 1)
+	while (gene_index < NONE_index && verif_erreur != 1)
 	{
 		if(tab_gene_lu[gene_index] == '*')
 		{
@@ -103,7 +71,7 @@ void calcul(serpent *g)
 			gene_next = tab_gene_lu[gene_index + 1];
 			gene_buffer = gene_previous * gene_next;
 		}
-		
+
 		if(tab_gene_lu[gene_index] == '/')
 		{
 			//Calcul de la division
@@ -112,7 +80,7 @@ void calcul(serpent *g)
 			if (gene_next == 0) verif_erreur = 1;
 			else gene_buffer = gene_previous / gene_next;
 		}
-		
+
 		if(tab_gene_lu[gene_index] == '*' || tab_gene_lu[gene_index] == '/')
 		{
 			//Mise du résultat dans le tableau + Décalage des valeurs du tableau + Affectation valeur VIDE aux derniers emplacements de la liste
@@ -122,84 +90,25 @@ void calcul(serpent *g)
 			tab_gene_lu[NONE_index - 1] = VIDE;
 			NONE_index = NONE_index - 2;
 		}
-		
+
 		if(tab_gene_lu[gene_index] != '*' && tab_gene_lu[gene_index] != '/') gene_index = gene_index + 2;
-		
-		 for (int index = 0; index < NBGENE-1 ; index ++)
-		{
-			if (tab_gene_lu[index] != VIDE)
-			{
-				if (index%2 == 0) printf("%d ",tab_gene_lu[index]);
-				if (index%2 == 1) printf("%c ",tab_gene_lu[index]);
-			}
-		}
-		printf("\n");
 	}
 
-
-	/*
-	//DIVISION ENTIERE
-	gene_index = 1;
-	while (gene_index < NBGENE - 2 && tab_gene_lu[gene_index] != VIDE && verif_erreur != 1)
-	{
-		if(tab_gene_lu[gene_index] == '/')
-		{
-			//Calcul de la division
-			gene_previous = tab_gene_lu[gene_index - 1];
-			gene_next = tab_gene_lu[gene_index + 1];
-			if (gene_next == 0) verif_erreur = 1;
-			else gene_buffer = gene_previous / gene_next;
-
-			//Mise du résultat dans le tableau + Décalage des valeurs du tableau + Affectation valeur VIDE aux derniers emplacements de la liste
-			if (verif_erreur != 1){
-				tab_gene_lu[gene_index - 1] = gene_buffer;
-				for(int index_tab = gene_index; index_tab < NBGENE - 3; index_tab++) tab_gene_lu[index_tab] = tab_gene_lu[index_tab + 2];
-				tab_gene_lu[NONE_index] = VIDE;
-				tab_gene_lu[NONE_index - 1] = VIDE;
-				NONE_index = NONE_index - 2;
-			}
-		}
-		if(tab_gene_lu[gene_index] != '/') gene_index = gene_index + 2;
-		 for (int index = 0; index < NBGENE-1 ; index ++)
-		{
-			if (tab_gene_lu[index] != VIDE)
-			{
-				if (index%2 == 0) printf("%d ",tab_gene_lu[index]);
-				if (index%2 == 1) printf("%c ",tab_gene_lu[index]);
-			}
-		}
-		printf("\n");
-	}
-	*/
-	
-	
 	//ADDITION + SOUSTRACTION
 	gene_index = 1;
 	result = tab_gene_lu[gene_index - 1];
-	while (gene_index < NBGENE - 2 && tab_gene_lu[gene_index] != VIDE && verif_erreur != 1)
+	while (gene_index < NONE_index && verif_erreur != 1)
 	{
 		if (tab_gene_lu[gene_index] == '+') result = result + tab_gene_lu[gene_index + 1];
 		if (tab_gene_lu[gene_index] == '-') result = result - tab_gene_lu[gene_index + 1];
 		gene_index = gene_index + 2;
-		
-		if(tab_gene_lu[gene_index] != '+' || tab_gene_lu[gene_index] != '-') printf("result = %d\n", result);
-		
-		/*if(tab_gene_lu[gene_index] != '+' && tab_gene_lu[gene_index] != '-') gene_index = gene_index + 2;
-		 for (int index = 0; index < NBGENE-1 ; index ++)
-		{
-			if (tab_gene_lu[index] != VIDE)
-			{
-				if (index%2 == 0) printf("%d ",tab_gene_lu[index]);
-				if (index%2 == 1) printf("%c ",tab_gene_lu[index]);
-			}
-		}*/
 	}
-	
-	
-	g->score = abs(result - 0x666);
-	if (verif_erreur == 1) g->score = MAX;
 
-	printf("score = %d\n\n\n", g->score);
+	//Synthèse de calcul
+	if (verif_erreur == 1) g->score = MAX;
+	else g->score = abs(result - 666);
+
+	free(tab_gene_lu);
 }
 
 void selection(groupe *population,groupe *parents)
