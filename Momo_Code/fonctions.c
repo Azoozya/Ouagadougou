@@ -53,7 +53,7 @@ int* LectureGene(serpent *g)
 
 void calcul(serpent *g)
 {
-	int verif_erreur = 0;
+	int check_error = 0;
 	int result = 0;
 	int gene_previous, gene_next, gene_buffer;
 	int gene_index;
@@ -62,7 +62,7 @@ void calcul(serpent *g)
 
 	//MULTIPLICATION + DIVISION
 	gene_index = 1;
-	while (gene_index < NONE_index && verif_erreur != 1)
+	while (gene_index < NONE_index && check_error != 1)
 	{
 		if(tab_gene_lu[gene_index] == '*')
 		{
@@ -77,7 +77,7 @@ void calcul(serpent *g)
 			//Calcul de la division
 			gene_previous = tab_gene_lu[gene_index - 1];
 			gene_next = tab_gene_lu[gene_index + 1];
-			if (gene_next == 0) verif_erreur = 1;
+			if (gene_next == 0) check_error = 1;
 			else gene_buffer = gene_previous / gene_next;
 		}
 
@@ -97,7 +97,7 @@ void calcul(serpent *g)
 	//ADDITION + SOUSTRACTION
 	gene_index = 1;
 	result = tab_gene_lu[gene_index - 1];
-	while (gene_index < NONE_index && verif_erreur != 1)
+	while (gene_index < NONE_index && check_error != 1)
 	{
 		if (tab_gene_lu[gene_index] == '+') result = result + tab_gene_lu[gene_index + 1];
 		if (tab_gene_lu[gene_index] == '-') result = result - tab_gene_lu[gene_index + 1];
@@ -105,19 +105,33 @@ void calcul(serpent *g)
 	}
 
 	//Synthèse de calcul
-	if (verif_erreur == 1) g->score = MAX;
-	else g->score = abs(result - 666);
+	if (check_error == 1) g->score = MAX;
+	else g->score = abs(result - SEEK);
 
 	free(tab_gene_lu);
 }
 
-void selection(groupe *population,groupe *parents)
-{
-}
-
 int evaluation(groupe *population)
 {
-	return 0;
+	serpent *snake;
+	int number_of_member = population->nombre;
+	int check_evil = 1;
+
+	for(int member_index = 0; member_index < number_of_member; member_index++)
+	{
+		snake = ((population->membres) + member_index);
+		calcul(snake);
+		if(snake->score == 0) check_evil = 0;
+	}
+
+	//MOYENNE + ECART-TYPE
+	/* À faire */
+
+	return check_evil;
+}
+
+void selection(groupe *population,groupe *parents)
+{
 }
 
 void generationAleatoire(groupe *population)
@@ -127,6 +141,7 @@ void generationAleatoire(groupe *population)
 void reproduction(groupe *population,groupe *parents)
 {
 }
+
 void mutation (groupe *population)
 {
 }
