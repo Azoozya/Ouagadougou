@@ -3,6 +3,7 @@
 #include <strings.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 
 #ifndef NBPOPULATION
 #define NBPOPULATION 1000

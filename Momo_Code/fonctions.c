@@ -113,15 +113,29 @@ void calcul(serpent *g)
 
 int evaluation(groupe *population)
 {
-	serpent *snake;
-	int number_of_member = population->nombre;
+	serpent *snake, buffer;
 	int check_evil = 1;
 
-	for(int member_index = 0; member_index < number_of_member; member_index++)
+	for(int member_index = 0; member_index < population->nombre; member_index++)
 	{
 		snake = ((population->membres) + member_index);
 		calcul(snake);
 		if(snake->score == 0) check_evil = 0;
+	}
+
+	//TRI DE LA POPULATION EN FONCTION DE LEUR SCORE (méthode BubbleSort)
+	for(int index = 0; index < population->nombre-1; index++)
+	{
+		for(int member_index = 1; member_index < population->nombre; member_index++)
+		{
+			snake = ((population->membres) + member_index);
+			if (snake->score < (*(snake-1)).score)
+			{
+				buffer = *snake;
+				*snake = *(snake-1);
+				*(snake-1) = buffer;
+			}
+		}
 	}
 
 	//MOYENNE + ECART-TYPE
@@ -132,16 +146,85 @@ int evaluation(groupe *population)
 
 void selection(groupe *population,groupe *parents)
 {
-}
+	//Méthode de selection élitiste, Tableau population normalement déjà trié dans evaluation()
+	for (int index = 0; index < parents->nombre; index++)
+				*((parents->membres) + index) = *((population->membres) + index);
+	}
 
 void generationAleatoire(groupe *population)
 {
+	serpent *snake;
+	for (int member_index = 0; member_index < population->nombre; member_index++)
+	{
+		snake = ((population->membres) + member_index);
+		for(int gene_index = 0; gene_index < NBGENE/2; gene_index++)
+		{
+			srand(time(0));
+			*((snake->gene) + gene_index) = rand();
+		}
+	}
 }
 
 void reproduction(groupe *population,groupe *parents)
 {
+	unsigned int indic_parents = 0;
+	unsigned int indic_gene = 1;
+	unsigned char buffer;
+	serpent *snake_child, *snake_parents;
+	unsigned char *genome_parent1, *genome_parent2;
+
+	for(int child_index = 0; child_index < population->nombre; child_index++)
+	{
+		snake_child = ((population->membres) + child_index);
+		snake_child->score = MAX; // Valeur par défaut
+
+		snake_parents = ((parents->membres) + indic_parents);
+		genome_parent1 = snake_parents->gene;
+		genome_parent2 = (snake_parents + 1)->gene;
+
+		if (indic_gene%2 == 1)
+		{
+			buffer = (genome_parent1[indic_gene/2] & 0xf0) + (genome_parent2[indic_gene/2] & 0x0f);
+			for(int gene_rank = 0; gene_rank < indic_gene/2; gene_rank++) *((snake_child->gene) + gene_rank) = genome_parent1[gene_rank];
+			*((snake_child->gene) + indic_gene/2) = buffer;
+			for(int gene_rank = indic_gene/2 + 1; gene_rank < NBGENE/2; gene_rank++) *((snake_child->gene) + gene_rank) = genome_parent2[gene_rank];
+		}
+		else
+		{
+			for(int gene_rank = 0; gene_rank < indic_gene/2; gene_rank++) *((snake_child->gene) + gene_rank) = genome_parent1[gene_rank];
+			for(int gene_rank = indic_gene/2; gene_rank < NBGENE/2; gene_rank++) *((snake_child->gene) + gene_rank) = genome_parent2[gene_rank];
+		}
+
+		indic_parents = indic_parents + 2;
+		indic_gene++;
+		if(indic_parents >= parents->nombre) indic_parents = 0;
+		if (indic_gene >= NBGENE) indic_gene = 0;
+	}
+
 }
 
 void mutation (groupe *population)
 {
+	serpent *snake;
+	unsigned char *geneX;
+	unsigned char buffer;
+	int muted = 1000; // Définit le taux de mutation. À 1000, le taux est de 0.001
+	for (int member_index = 0; member_index < population->nombre; member_index++)
+	{
+		snake = ((population->membres) + member_index);
+		for (int gene_index = 0; gene_index < NBGENE / 2; gene_index++)
+		{
+			geneX = ((snake->gene) + gene_index);
+			for (int mutation_index = 0; mutation_index < 8; mutation_index++)
+			{
+				srand(time(0));
+				if(rand()%muted == 0)
+				{
+					buffer = 0x80 >> mutation_index;
+					if((*geneX & mutation_index) == mutation_index) *geneX = *geneX & ~buffer;
+					else *geneX = *geneX | buffer;
+				}
+			}
+		}
+	}
 }
