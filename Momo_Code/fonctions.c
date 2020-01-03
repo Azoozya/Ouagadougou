@@ -20,17 +20,20 @@ void affiche(unsigned char *gene)
 }
 
 int* LectureGene(serpent *g)
+// Lis le gène passé en argument et traduit son expression pour la mettre dans un tableau de valeur
 {
 	int gene1, gene2, buffer;
 	int* GeneTab;
 	GeneTab = malloc(sizeof(int)*NBGENE-1);
 
 	for(int index = 0; index < NBGENE/2; index++)
+	//À chaque char lu, on sépare ce dernier en deux pour différencier les opérandes (gene1) et les opérateurs (gene2)
 	{
 		buffer = g->gene[index];
 		gene1 = g->gene[index] >> 4;
 
-		switch (buffer & 0x03){
+		switch (buffer & 0x03) //Pour pouvoir s'occuper seulement des bits traduisant l'opérateur
+		{
 			case 0 :
 				gene2 = '+';
 				break;
@@ -52,6 +55,9 @@ int* LectureGene(serpent *g)
 }
 
 void calcul(serpent *g)
+/*Après avoir lu le gène grâce à LectureGene(), nous nous servons du tableau résultant pour pouvoir y calculer
+directement le score dedans avec des décalages de valeurs et permettre la mise à jour de l'expression
+dans le tableau (principalement pour effectuer les calculs prioritaires) */
 {
 	int check_error = 0;
 	int result = 0;
@@ -162,8 +168,8 @@ int evaluation(groupe *population)
 }
 
 void selection(groupe *population,groupe *parents)
+//Méthode de selection élitiste, Tableau population normalement déjà trié dans evaluation()
 {
-	//Méthode de selection élitiste, Tableau population normalement déjà trié dans evaluation()
 	for (int index = 0; index < parents->nombre; index++)
 				*((parents->membres) + index) = *((population->membres) + index);
 	}
