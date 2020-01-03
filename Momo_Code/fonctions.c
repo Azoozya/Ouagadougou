@@ -115,12 +115,17 @@ int evaluation(groupe *population)
 {
 	serpent *snake, buffer;
 	int check_evil = 1;
+	float calcul_moyenne = 0;
+	float calcul_variance = 0;
+	float moyenne, ecart_type;
 
 	for(int member_index = 0; member_index < population->nombre; member_index++)
 	{
 		snake = ((population->membres) + member_index);
 		calcul(snake);
 		if(snake->score == 0) check_evil = 0;
+
+		calcul_moyenne = calcul_moyenne + snake->score;
 	}
 
 	//TRI DE LA POPULATION EN FONCTION DE LEUR SCORE (méthode BubbleSort)
@@ -139,7 +144,19 @@ int evaluation(groupe *population)
 	}
 
 	//MOYENNE + ECART-TYPE
-	/* À faire */
+	moyenne = calcul_moyenne / population->nombre;
+
+	for(int member_index = 0; member_index < population->nombre; member_index++)
+	{
+		snake = ((population->membres) + member_index);
+		calcul_variance = calcul_variance + powf(abs(snake->score - moyenne), 2);
+	}
+	calcul_variance = calcul_variance / population->nombre;
+	ecart_type = sqrtf(calcul_variance);
+
+	if (check_evil == 0) printf("Serpent Maléfique Présent !\n");
+	printf("Moyenne = %f\n",moyenne);
+	printf("Écart-type = %f\n",ecart_type);
 
 	return check_evil;
 }

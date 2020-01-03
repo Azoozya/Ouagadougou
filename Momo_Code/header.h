@@ -3,6 +3,7 @@
 #include <strings.h>
 #include <string.h>
 #include <unistd.h>
+#include <math.h>
 #include <time.h>
 
 #ifndef NBPOPULATION
@@ -47,5 +48,10 @@ int* LectureGene(serpent *g);
 
 
 // -------------------TESTS-------------------//
-// void testLecture(void);
 void testCalcul(void);
+void testLecture(void);
+void test_evaluation(void);
+void test_selection(void);
+void test_generationAleatoire(void);
+void test_reproduction(void);
+void test_mutation(void);
