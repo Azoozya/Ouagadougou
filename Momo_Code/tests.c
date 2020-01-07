@@ -113,7 +113,7 @@ void affiche_groupe(groupe* population)
 	 {
 		 	snake = (population->membres)[index];
 			for (size_t rank_gene = 0; rank_gene < NBGENE; rank_gene++)
-					printf("%x",lire(snake.gene,index));
+					printf("%x",lire(snake.gene,rank_gene));
 			printf("\n");
 	 }
 }

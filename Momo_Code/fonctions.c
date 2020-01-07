@@ -176,15 +176,13 @@ void selection(groupe *population,groupe *parents)
 void generationAleatoire(groupe *population)
 {
 	serpent *snake;
+	srand(time(0));
 	for (int member_index = 0; member_index < population->nombre; member_index++)
 	{
 		snake = ((population->membres) + member_index);
 		for(int gene_index = 0; gene_index < NBGENE/2; gene_index++)
 		{
-			// A vérifier
-			srand(time(0));
-			// rand() rend un int
-			*((snake->gene) + gene_index) = rand();
+			*((snake->gene) + gene_index) = (unsigned char)rand();
 		}
 	}
 }
