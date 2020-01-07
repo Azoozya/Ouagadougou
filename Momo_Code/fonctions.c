@@ -195,8 +195,10 @@ void reproduction(groupe *population,groupe *parents)
 	serpent *snake_child, *snake_parents;
 	unsigned char *genome_parent1, *genome_parent2;
 
+
 	for(int child_index = 0; child_index < population->nombre; child_index++)
 	{
+		//population n'est pas malloc
 		snake_child = ((population->membres) + child_index);
 		snake_child->score = MAX; // Valeur par défaut
 
@@ -225,11 +227,12 @@ void reproduction(groupe *population,groupe *parents)
 
 }
 
-void mutation (groupe *population)
+void mutation(groupe *population)
 {
 	serpent *snake;
 	unsigned char *geneX;
 	unsigned char buffer;
+	srand(time(0));
 	int muted = 1000; // Définit le taux de mutation. À 1000, le taux est de 0.001
 	for (int member_index = 0; member_index < population->nombre; member_index++)
 	{
@@ -239,16 +242,54 @@ void mutation (groupe *population)
 			geneX = ((snake->gene) + gene_index);
 			for (int mutation_index = 0; mutation_index < 8; mutation_index++)
 			{
-				srand(time(0));
 				// A revoir
 				if(rand()%muted == 0)
 				{
 					buffer = 0x80 >> mutation_index;
-					// On peut passer par un xor
-					if((*geneX & mutation_index) == mutation_index) *geneX = *geneX & ~buffer;
-					else *geneX = *geneX | buffer;
+					*geneX = *geneX^buffer;
 				}
 			}
 		}
 	}
+}
+
+float eval_mutation(groupe* population_before,groupe* population_after)
+{
+	float to_return = 0.0;
+	unsigned int total = 0; //Compter le nombre de bit que l'on a traité
+	unsigned int counter = 0; //Compter le nombre de bit qui ont muté
+	unsigned char buffer_b = '\0';
+	unsigned char buffer_a = '\0';
+	serpent before;
+	serpent after;
+	unsigned int subrank;
+	for (size_t rank = 0; rank < population_before->nombre; rank++)
+	{
+		before = (population_before->membres)[rank];
+		after = (population_after->membres)[rank];
+		for (int index = 0 ; index < NBGENE/2 ; index++)
+			{
+			subrank = 0x80;
+			buffer_b = (before.gene)[index];
+			buffer_a = (after.gene)[index];
+			for(int bit = 0 ; bit < 8 ; bit++)
+				{
+					if((buffer_b&subrank) != (buffer_a&subrank))
+						counter++;
+					total++;
+					subrank = subrank >> 1;
+				}
+		}
+	}
+	to_return = ((float)counter)/total;
+	return to_return;
+}
+
+//On suppose que les 2 groupes aient le même nombre de membres
+void copy_snakes(groupe* population_dst,groupe* population_src)
+{
+	for (size_t rank = 0; rank < population_dst->nombre; rank++)
+	 {
+		 strncpy((char*)((population_dst->membres)[rank]).gene,(char*)((population_src->membres)[rank]).gene,NBGENE/2);
+	 }
 }

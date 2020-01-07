@@ -16,8 +16,8 @@ int main(void){
 
 test_evaluation();
 test_selection();
-*/test_generationAleatoire();
-/*test_reproduction();
+test_generationAleatoire();*/
+test_reproduction();/*
 test_mutation();*/
 
 	return 1;
@@ -47,7 +47,7 @@ serpent test[]={
 	for(i=0;i<sizeof(test)/sizeof(serpent);i++) {
 		expect=test[i].score;
 		calcul(&test[i]);
-		if (expect != test[i].score) printf("error\n");
+		if (expect != test[i].score) printf("Calcul ne fonctionne pas.\n");
 
 		//Fonction du professeur, partie ci dessous ajouté par Mohamet
 		else printf("Good\n");
@@ -74,10 +74,11 @@ void testLecture(void)
 }
 
 
-void test_evaluation(void)
+void test_evaluation(void) // a Tester
 {
 	int success = 0;
-	serpent *snake_test;
+	int fail = 1;
+	serpent snake_test;
 	serpent member_test[]={
 		{"\x67\xc6\x69\x73\x51\xff\x4a\xec\x29\xcd\xba\xab\xf2\xfb\xe3\x46\x7c\xc2\x54\xf8\x1b\xe8\xe7\x8d\x76\x5a\x2e\x63\x33\x9f\xc9\x9a",660},
 		{"\x66\x32\x0d\xb7\x31\x58\xa3\x5a\x25\x5d\x05\x17\x58\xe9\x5e\xd4\xab\xb2\xcd\xc6\x9b\xb4\x54\x11\x0e\x82\x74\x41\x21\x3d\xdc\x87",735},
@@ -96,20 +97,42 @@ void test_evaluation(void)
 	population_test.membres = member_test;
 	population_test.nombre = 11;
 
-	evaluation(&population_test);
-	snake_test = population_test.membres;
+	groupe population_generated;
+	population_generated.nombre = 11;
+	population_generated.membres = malloc(population_generated.nombre*sizeof(serpent));
+	generationAleatoire(&population_generated);
 
-	/* Tests à faire */
+	for (size_t rank = 0; rank < 11; rank++)
+		{
+		  snake_test = (population_generated.membres)[rank];
+			calcul(&snake_test);
+			if (snake_test.score == MAX)
+				snake_test.score = 0;
+		}
 
-	if (success == 1) printf("evaluation() : Erreur\n");
-	else printf("evaluation() fonctionnel\n");
+	fail = evaluation(&population_test);
+	success = evaluation(&population_generated);
 
+	if (success == 1 && fail == 1)
+		printf("Evaluation ne détecte pas les groupes maléfiques.\n");
+	else if (success == 0 && fail == 0)
+		printf("Evaluation détecte tout les groupes comme maléfique.\n");
+	else if (success == 1 && fail == 0)
+		printf("Evaluation détecte tout à l'envers.\n");
+	else if (success == 0 && fail == 1)
+		printf("Evaluation est fonctionnelle.\n");
+	else
+		printf("Evaluation renvoie nawak %d:0 %d:1\n",fail,success);
+	free(&population_test);
+	free(&population_generated);
 }
 
-void affiche_groupe(groupe* population)
+void affiche_groupe_test(groupe* population,unsigned char range) //isOk
 {
 	serpent snake;
-	for (size_t index = 0; index < population->nombre; index++)
+	if (range > population->nombre)
+		range = population->nombre;
+	for (size_t index = 0; index < range; index++)
 	 {
 		 	snake = (population->membres)[index];
 			for (size_t rank_gene = 0; rank_gene < NBGENE; rank_gene++)
@@ -123,22 +146,67 @@ void test_selection(void)
 	/* Tests à faire */
 }
 
-void test_generationAleatoire(void)
+void test_generationAleatoire(void) //isOk
 {
 	groupe population;
 	serpent* snake;
-	population.nombre = 50;
-	population.membres = malloc(50*sizeof(serpent));
+	population.nombre = NBPARENTS;
+	population.membres = malloc(population.nombre*sizeof(serpent));
 	generationAleatoire(&population);
-	affiche_groupe(&population);
+	affiche_groupe_test(&population,NBPARENTS);
+	free(population.membres);
 }
 
 void test_reproduction(void)
 {
-	/* Tests à faire */
+	groupe parents;
+	groupe enfants;
+	serpent children;
+	serpent mother;
+	serpent father;
+	unsigned int error = 0;
+	unsigned int subrank = 0;
+	parents.nombre = NBPARENTS;
+	enfants.nombre = NBPARENTS;
+	parents.membres = malloc(parents.nombre*sizeof(serpent));
+	generationAleatoire(&parents);
+	reproduction(&enfants,&parents);
+
+	for(int rank = 0 ; rank < enfants.nombre ; rank++)
+		{
+			children = (enfants.membres)[rank];
+			father = (parents.membres)[(2*rank)%NBPARENTS];
+			mother = (parents.membres)[(2*rank+1)%NBPARENTS];
+			subrank = 0;
+			while ( (children.gene)[subrank] == (father.gene)[subrank])
+				 subrank++;
+			for (size_t index = subrank; index < NBGENE/2; index++)
+			 {
+				 if ((children.gene)[index] != (mother.gene)[subrank])
+				 		error++;
+			 }
+		}
+	if (error > 0)
+		printf("Reproduction ne fonctionne pas (%d erreurs).\n",error);
+	else
+		printf("Reproduction est fonctionnelle.\n");
 }
 
-void test_mutation(void)
+void test_mutation(void) //isOk
 {
-	/* Tests à faire */
+	groupe population;
+	groupe population_muted;
+	population.nombre = NBPARENTS;
+	population_muted.nombre = NBPARENTS;
+	population.membres = malloc(population.nombre*sizeof(serpent));
+  population_muted.membres = malloc(population_muted.nombre *sizeof(serpent));
+
+	generationAleatoire(&population);
+	copy_snakes(&population_muted,&population);
+	mutation(&population_muted);
+	printf("On obtient un pourcentage de mutation de :%f\n",eval_mutation(&population,&population_muted));
+	affiche_groupe_test(&population,1);
+	affiche_groupe_test(&population_muted,1);
+	free(population.membres);
+	free(population_muted.membres);
 }

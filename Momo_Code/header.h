@@ -48,8 +48,10 @@ void generationAleatoire(groupe *population);
 void reproduction(groupe *population,groupe *parents);
 void mutation (groupe *population);
 int* LectureGene(serpent *g);
-void affiche_groupe(groupe* population);
 
+void affiche_groupe_test(groupe* population,unsigned char range);
+float eval_mutation(groupe* population_before,groupe* population_after);
+void copy_snakes(groupe* population_dst,groupe* population_src);
 // -------------------TESTS-------------------//
 void testCalcul(void);
 void testLecture(void);
