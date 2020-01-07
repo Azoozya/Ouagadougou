@@ -6,6 +6,7 @@
 #include <math.h>
 #include <time.h>
 
+
 #ifndef NBPOPULATION
 #define NBPOPULATION 1000
 #endif
@@ -35,7 +36,9 @@ typedef struct {
 	int nombre;
 } groupe;
 
-
+#ifndef lire
+#define lire(gene,i)    (i%2)?(gene[i/2]&0xF):(gene[i/2]>>4)
+#endif
 
 void affiche(unsigned char *gene);
 void calcul(serpent *g);
@@ -45,7 +48,7 @@ void generationAleatoire(groupe *population);
 void reproduction(groupe *population,groupe *parents);
 void mutation (groupe *population);
 int* LectureGene(serpent *g);
-
+void affiche_groupe(groupe* population);
 
 // -------------------TESTS-------------------//
 void testCalcul(void);

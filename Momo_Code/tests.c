@@ -2,7 +2,7 @@
 
 int main(void){
 //	testLecture();
-	testCalcul();
+	//testCalcul();
 
 /*	serpent s2 = {"\x67\xc6\x69\x73\x51\xff\x4a\xec\x29\xcd\xba\xab\xf2\xfb\xe3\x46\x7c\xc2\x54\xf8\x1b\xe8\xe7\x8d\x76\x5a\x2e\x63\x33\x9f\xc9\x9a",660};
 	serpent s3 = {"\x0b\xe1\x1a\x1c\x7f\x23\xf8\x29\xf8\xa4\x1b\x13\xb5\xca\x4e\xe8\x98\x32\x38\xe0\x79\x4d\x3d\x34\xbc\x5f\x4e\x77\xfa\xcb\x6c\x05",1302};
@@ -12,12 +12,12 @@ int main(void){
 	printf("\n\n");
 	printf("s3 score = %d\ns3 : ",s3.score);
 	affiche(s3.gene);
-	printf("\n\n"); 
+	printf("\n\n");
 
 test_evaluation();
 test_selection();
-test_generationAleatoire();
-test_reproduction();
+*/test_generationAleatoire();
+/*test_reproduction();
 test_mutation();*/
 
 	return 1;
@@ -106,6 +106,18 @@ void test_evaluation(void)
 
 }
 
+void affiche_groupe(groupe* population)
+{
+	serpent snake;
+	for (size_t index = 0; index < population->nombre; index++)
+	 {
+		 	snake = (population->membres)[index];
+			for (size_t rank_gene = 0; rank_gene < NBGENE; rank_gene++)
+					printf("%x",lire(snake.gene,index));
+			printf("\n");
+	 }
+}
+
 void test_selection(void)
 {
 	/* Tests à faire */
@@ -113,7 +125,12 @@ void test_selection(void)
 
 void test_generationAleatoire(void)
 {
-	/* Tests à faire */
+	groupe population;
+	serpent* snake;
+	population.nombre = 50;
+	population.membres = malloc(50*sizeof(serpent));
+	generationAleatoire(&population);
+	affiche_groupe(&population);
 }
 
 void test_reproduction(void)

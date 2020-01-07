@@ -10,10 +10,10 @@ Clear:
 	rm *.o
 
 fonctions.o: fonctions.c header.h
-	gcc -lm -Wall -g -std=c99 -c fonctions.c -o fonctions.o
+	gcc -Wall -g -std=c99 -c fonctions.c -o fonctions.o
 
 main.o: main.c header.h
-	gcc -lm -Wall -g -std=c99 -c main.c -o main.o
+	gcc -Wall -g -std=c99 -c main.c -o main.o
 
 purge:
 	rm -rf Final Test

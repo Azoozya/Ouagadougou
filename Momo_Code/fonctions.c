@@ -1,8 +1,5 @@
 #include "header.h"
 
-
-#define lire(gene,i)    (i%2)?(gene[i/2]&0xF):(gene[i/2]>>4);
-
 void affiche(unsigned char *gene)
 {
 	char code[]="+-*/";
@@ -23,8 +20,8 @@ int* LectureGene(serpent *g)
 // Lis le gène passé en argument et traduit son expression pour la mettre dans un tableau de valeur
 {
 	int gene1, gene2, buffer;
-	int* GeneTab;
-	GeneTab = malloc(sizeof(int)*NBGENE-1);
+	int* gene_tab;
+	gene_tab = malloc(sizeof(int)*(NBGENE-1));
 
 	for(int index = 0; index < NBGENE/2; index++)
 	//À chaque char lu, on sépare ce dernier en deux pour différencier les opérandes (gene1) et les opérateurs (gene2)
@@ -48,10 +45,10 @@ int* LectureGene(serpent *g)
 				break;
 		}
 
-		GeneTab[2*index] = gene1;
-		GeneTab[2*index + 1] = gene2;
+		gene_tab[2*index] = gene1;
+		gene_tab[2*index + 1] = gene2;
 	}
-	return GeneTab;
+	return gene_tab;
 }
 
 void calcul(serpent *g)
@@ -70,6 +67,8 @@ dans le tableau (principalement pour effectuer les calculs prioritaires) */
 	gene_index = 1;
 	while (gene_index < NONE_index && check_error != 1)
 	{
+
+		//On va alléger ça un peu
 		if(tab_gene_lu[gene_index] == '*')
 		{
 			//Calcul du produit
@@ -105,8 +104,8 @@ dans le tableau (principalement pour effectuer les calculs prioritaires) */
 	result = tab_gene_lu[gene_index - 1];
 	while (gene_index < NONE_index && check_error != 1)
 	{
-		if (tab_gene_lu[gene_index] == '+') result = result + tab_gene_lu[gene_index + 1];
-		if (tab_gene_lu[gene_index] == '-') result = result - tab_gene_lu[gene_index + 1];
+		if (tab_gene_lu[gene_index] == '+') result += tab_gene_lu[gene_index + 1];
+		if (tab_gene_lu[gene_index] == '-') result -= tab_gene_lu[gene_index + 1];
 		gene_index = gene_index + 2;
 	}
 
@@ -121,7 +120,7 @@ int evaluation(groupe *population)
 {
 	serpent *snake, buffer;
 	int check_evil = 1;
-	float calcul_moyenne = 0;
+	float calcul_moyenne = 0.0;
 	float calcul_variance = 0;
 	float moyenne, ecart_type;
 
@@ -182,7 +181,9 @@ void generationAleatoire(groupe *population)
 		snake = ((population->membres) + member_index);
 		for(int gene_index = 0; gene_index < NBGENE/2; gene_index++)
 		{
+			// A vérifier
 			srand(time(0));
+			// rand() rend un int
 			*((snake->gene) + gene_index) = rand();
 		}
 	}
@@ -241,9 +242,11 @@ void mutation (groupe *population)
 			for (int mutation_index = 0; mutation_index < 8; mutation_index++)
 			{
 				srand(time(0));
+				// A revoir
 				if(rand()%muted == 0)
 				{
 					buffer = 0x80 >> mutation_index;
+					// On peut passer par un xor
 					if((*geneX & mutation_index) == mutation_index) *geneX = *geneX & ~buffer;
 					else *geneX = *geneX | buffer;
 				}
