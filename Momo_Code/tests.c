@@ -169,6 +169,7 @@ void test_reproduction(void)
 	parents.nombre = NBPARENTS;
 	enfants.nombre = NBPARENTS;
 	parents.membres = malloc(parents.nombre*sizeof(serpent));
+	enfants.membres = malloc(enfants.nombre*sizeof(serpent));
 	generationAleatoire(&parents);
 	reproduction(&enfants,&parents);
 
@@ -182,7 +183,7 @@ void test_reproduction(void)
 				 subrank++;
 			for (size_t index = subrank; index < NBGENE/2; index++)
 			 {
-				 if ((children.gene)[index] != (mother.gene)[subrank])
+				 if ((children.gene)[index] != (mother.gene)[index])
 				 		error++;
 			 }
 		}

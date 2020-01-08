@@ -1,10 +1,10 @@
 all: Test Clear
 
 Final: fonctions.o main.o
-	gcc -lm -Wall -g -std=c99 fonctions.o main.o -o Final
+	gcc -Wall -g -std=c99 fonctions.o main.o -o Final -lm
 
 Test: fonctions.o tests.o
-	gcc -lm -Wall -g -std=c99 fonctions.o tests.o -o Test
+	gcc -Wall -g -std=c99 fonctions.o tests.o -o Test -lm
 
 Clear:
 	rm *.o

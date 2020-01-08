@@ -3,8 +3,8 @@
 #include <strings.h>
 #include <string.h>
 #include <unistd.h>
-#include <math.h>
 #include <time.h>
+#include <math.h>
 
 
 #ifndef NBPOPULATION
