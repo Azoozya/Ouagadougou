@@ -128,7 +128,7 @@ void test_evaluation(void) // a Tester
 	free(&population_generated);
 }
 
-void affiche_groupe_test(groupe* population,unsigned char range) //isOk
+void affiche_groupe_test(groupe* population,unsigned char range)
 {
 	serpent snake;
 	if (range > population->nombre)
@@ -163,7 +163,7 @@ void test_selection(void)
 	{
 		snake_pop = ((test_population.membres) + index);
 		snake_parents = ((test_parents.membres) + index);
-		if (strcmp(snake_pop->gene, snake_parents->gene) != 0)
+		if (strncmp(snake_pop->gene, snake_parents->gene, NBGENE) != 0)
 		{
 			success = 0;
 			error++;
@@ -176,7 +176,7 @@ void test_selection(void)
 	free(test_population.membres);
 }
 
-void test_generationAleatoire(void) //isOk
+void test_generationAleatoire(void)
 {
 	groupe population;
 	serpent* snake;
