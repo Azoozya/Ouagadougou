@@ -2,7 +2,8 @@
 
 int main(void){
 //	testLecture();
-	//testCalcul();
+//	testCalcul();
+	test_selection();
 
 /*	serpent s2 = {"\x67\xc6\x69\x73\x51\xff\x4a\xec\x29\xcd\xba\xab\xf2\xfb\xe3\x46\x7c\xc2\x54\xf8\x1b\xe8\xe7\x8d\x76\x5a\x2e\x63\x33\x9f\xc9\x9a",660};
 	serpent s3 = {"\x0b\xe1\x1a\x1c\x7f\x23\xf8\x29\xf8\xa4\x1b\x13\xb5\xca\x4e\xe8\x98\x32\x38\xe0\x79\x4d\x3d\x34\xbc\x5f\x4e\x77\xfa\xcb\x6c\x05",1302};
@@ -17,8 +18,8 @@ int main(void){
 test_evaluation();
 test_selection();
 test_generationAleatoire();*/
-test_reproduction();/*
-test_mutation();*/
+//test_reproduction();
+//test_mutation();
 
 	return 1;
 
@@ -143,7 +144,36 @@ void affiche_groupe_test(groupe* population,unsigned char range) //isOk
 
 void test_selection(void)
 {
-	/* Tests à faire */
+	groupe test_population;
+	groupe test_parents;
+	int success = 1;
+	int error = 0;
+	test_population.nombre = NBPOPULATION;
+	test_parents.nombre = NBPARENTS;
+	test_parents.membres = malloc(sizeof(serpent) * NBPARENTS);
+	test_population.membres = malloc(sizeof(serpent) * NBPOPULATION);
+	serpent *snake_pop, *snake_parents;
+
+	generationAleatoire(&test_population);
+	evaluation(&test_population);
+
+	selection(&test_population, &test_parents);
+
+	for(int index = 0; index < NBPARENTS; index++)
+	{
+		snake_pop = ((test_population.membres) + index);
+		snake_parents = ((test_parents.membres) + index);
+		if (strcmp(snake_pop->gene, snake_parents->gene) != 0)
+		{
+			success = 0;
+			error++;
+		}
+	}
+
+	if (success == 1) printf("selection() fonctionnel\n");
+	else printf("selection() non fonctionnel, nombre d'erreurs : %d\n",error);
+	free(test_parents.membres);
+	free(test_population.membres);
 }
 
 void test_generationAleatoire(void) //isOk
