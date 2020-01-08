@@ -1,8 +1,9 @@
-#include "header.h" 
+#include "header.h"
 
 
 int main(int argc, char *argv[])
 {
+	srand(time(0));
 	int opt,nbgeneration=0;
  	groupe population,parents;
 

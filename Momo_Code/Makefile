@@ -1,4 +1,4 @@
-all: Test Clear
+all: Final Test Clear
 
 Final: fonctions.o main.o
 	gcc -Wall -g -std=c99 fonctions.o main.o -o Final -lm

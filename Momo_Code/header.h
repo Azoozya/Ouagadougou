@@ -5,10 +5,10 @@
 #include <unistd.h>
 #include <time.h>
 #include <math.h>
-
+#include <getopt.h>
 
 #ifndef NBPOPULATION
-#define NBPOPULATION 1000
+#define NBPOPULATION 100
 #endif
 
 #ifndef NBPARENTS
