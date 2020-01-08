@@ -16,7 +16,7 @@ void affiche(unsigned char *gene)
 	printf("\n");
 }
 
-int* LectureGene(serpent *g)
+int* lecture_gene(serpent *g)
 // Lis le gène passé en argument et traduit son expression pour la mettre dans un tableau de valeur
 {
 	int gene1, gene2, buffer;
@@ -61,33 +61,24 @@ dans le tableau (principalement pour effectuer les calculs prioritaires) */
 	int gene_previous, gene_next, gene_buffer;
 	int gene_index;
 	int NONE_index = NBGENE - 2;
-	int* tab_gene_lu = LectureGene(g);
+	int* tab_gene_lu = lecture_gene(g);
 
 	//MULTIPLICATION + DIVISION
 	gene_index = 1;
 	while (gene_index < NONE_index && check_error != 1)
 	{
-
-		//On va alléger ça un peu
-		if(tab_gene_lu[gene_index] == '*')
-		{
-			//Calcul du produit
-			gene_previous = tab_gene_lu[gene_index - 1];
-			gene_next = tab_gene_lu[gene_index + 1];
-			gene_buffer = gene_previous * gene_next;
-		}
-
-		if(tab_gene_lu[gene_index] == '/')
-		{
-			//Calcul de la division
-			gene_previous = tab_gene_lu[gene_index - 1];
-			gene_next = tab_gene_lu[gene_index + 1];
-			if (gene_next == 0) check_error = 1;
-			else gene_buffer = gene_previous / gene_next;
-		}
-
 		if(tab_gene_lu[gene_index] == '*' || tab_gene_lu[gene_index] == '/')
 		{
+			gene_previous = tab_gene_lu[gene_index - 1];
+			gene_next = tab_gene_lu[gene_index + 1];
+
+			if(tab_gene_lu[gene_index] == '/') //Calcul de la division
+			{
+				if (gene_next == 0) check_error = 1;
+				else gene_buffer = gene_previous / gene_next;
+			}
+			else gene_buffer = gene_previous * gene_next; //Calcul de la multiplication
+
 			//Mise du résultat dans le tableau + Décalage des valeurs du tableau + Affectation valeur VIDE aux derniers emplacements de la liste
 			tab_gene_lu[gene_index - 1] = gene_buffer;
 			for(int index_tab = gene_index; index_tab < NBGENE - 3; index_tab++) tab_gene_lu[index_tab] = tab_gene_lu[index_tab + 2];
@@ -121,7 +112,7 @@ int evaluation(groupe *population)
 	serpent *snake, buffer;
 	int check_evil = 1;
 	float calcul_moyenne = 0.0;
-	float calcul_variance = 0;
+	float calcul_variance = 0.0;
 	float moyenne, ecart_type;
 
 	for(int member_index = 0; member_index < population->nombre; member_index++)
@@ -154,7 +145,7 @@ int evaluation(groupe *population)
 	for(int member_index = 0; member_index < population->nombre; member_index++)
 	{
 		snake = ((population->membres) + member_index);
-		calcul_variance = calcul_variance + powf(abs(snake->score - moyenne), 2);
+		calcul_variance = calcul_variance + (abs(snake->score - moyenne) * abs(snake->score - moyenne));
 	}
 	calcul_variance = calcul_variance / population->nombre;
 	ecart_type = sqrtf(calcul_variance);

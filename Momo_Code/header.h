@@ -47,7 +47,7 @@ int evaluation(groupe *population);
 void generationAleatoire(groupe *population);
 void reproduction(groupe *population,groupe *parents);
 void mutation (groupe *population);
-int* LectureGene(serpent *g);
+int* lecture_gene(serpent *g);
 
 void affiche_groupe_test(groupe* population,unsigned char range);
 float eval_mutation(groupe* population_before,groupe* population_after);
