@@ -81,7 +81,7 @@ dans le tableau (principalement pour effectuer les calculs prioritaires) */
 
 			//Mise du résultat dans le tableau + Décalage des valeurs du tableau + Affectation valeur VIDE aux derniers emplacements de la liste
 			tab_gene_lu[gene_index - 1] = gene_buffer;
-			for(int index_tab = gene_index; index_tab < NBGENE - 3; index_tab++) tab_gene_lu[index_tab] = tab_gene_lu[index_tab + 2];
+			for(int index_tab = gene_index; index_tab < NONE_index; index_tab++) tab_gene_lu[index_tab] = tab_gene_lu[index_tab + 2];
 			tab_gene_lu[NONE_index] = VIDE;
 			tab_gene_lu[NONE_index - 1] = VIDE;
 			NONE_index = NONE_index - 2;
@@ -165,6 +165,7 @@ void selection(groupe *population,groupe *parents)
 	}
 
 void generationAleatoire(groupe *population)
+//NB : srand() appelée dans les main
 {
 	serpent *snake;
 	for (int member_index = 0; member_index < population->nombre; member_index++)
@@ -178,6 +179,7 @@ void generationAleatoire(groupe *population)
 }
 
 void reproduction(groupe *population,groupe *parents)
+//NB : srand() appelée dans les main
 {
 	unsigned char buffer;
 	serpent *snake_child, *snake_parents;
@@ -224,6 +226,7 @@ void reproduction(groupe *population,groupe *parents)
 }
 
 void mutation(groupe *population)
+//NB : srand() appelée dans les main
 {
 	serpent *snake;
 	unsigned char *geneX;
